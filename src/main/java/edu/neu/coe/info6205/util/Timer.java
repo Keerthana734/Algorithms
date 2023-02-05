@@ -1,5 +1,6 @@
 package edu.neu.coe.info6205.util;
 
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -61,7 +62,31 @@ public class Timer {
     public <T, U> double repeat(int n, Supplier<T> supplier, Function<T, U> function, UnaryOperator<T> preFunction, Consumer<U> postFunction) {
         logger.trace("repeat: with " + n + " runs");
         // FIXME: note that the timer is running when this method is called and should still be running when it returns. by replacing the following code
-         return 0;
+
+        T prefunc = null;
+        for(int i=0; i<n; i++) {
+            lap();
+            pause();
+            if(preFunction != null) {
+                prefunc = preFunction.apply(supplier.get());
+            }
+            resume();
+            U fun = null;
+            if(prefunc != null) {
+                fun = function.apply(prefunc);
+            } else {
+                fun = function.apply(supplier.get());
+            }
+            pause();
+            if(postFunction != null) {
+                postFunction.accept(fun);
+            }
+            resume();
+        }
+        pause();
+        return meanLapTime();
+
+
         // END 
     }
 
@@ -188,7 +213,7 @@ public class Timer {
      */
     private static long getClock() {
         // FIXME by replacing the following code
-         return 0;
+        return System.nanoTime();
         // END 
     }
 
@@ -201,7 +226,8 @@ public class Timer {
      */
     private static double toMillisecs(long ticks) {
         // FIXME by replacing the following code
-         return 0;
+        long milliTicks = TimeUnit.NANOSECONDS.toMillis(ticks);
+        return milliTicks;
         // END 
     }
 

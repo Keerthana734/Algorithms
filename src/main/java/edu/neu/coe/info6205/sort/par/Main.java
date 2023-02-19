@@ -19,7 +19,7 @@ public class Main {
     public static void main(String[] args) {
         processArgs(args);
 
-        int n = 1000000;
+        int n = 2500000;
         System.out.println("N: " + n);
 
         for (int threads = 2; threads <= 64; threads *= 2) {
@@ -29,8 +29,8 @@ public class Main {
             Random random = new Random();
             int[] array = new int[n];
             ArrayList<Long> timeList = new ArrayList<>();
-            for (int j = 5; j <= 50; j+=5) {
-                ParSort.cutoff = 15000 * (j);
+            for (int j = 10; j <= 200; j+=20) {
+                ParSort.cutoff = 2000 * (j);
                 // for (int i = 0; i < array.length; i++) array[i] = random.nextInt(10000000);
                 long time;
                 long startTime = System.currentTimeMillis();
